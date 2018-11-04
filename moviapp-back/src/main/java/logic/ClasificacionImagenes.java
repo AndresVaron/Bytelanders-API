@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -22,13 +23,17 @@ import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ClassifiedImag
 import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ClassifyOptions;
 import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ClassifyOptions.Builder;
 
+import entities.ClienteEntity;
 import exceptions.BusinessLogicException;
 import persistence.ClientePersistence;
 
 public class ClasificacionImagenes {
 
 	@Inject
-	DireccionErradaLogic dirLog;
+	private DireccionErradaLogic dirLog;
+	
+	@Inject
+	private ClientePersistence clientePersistence;
 	
     /**
      * Metodo principal que integra todas las soluciones
@@ -39,7 +44,8 @@ public class ClasificacionImagenes {
         //TODO Con la direccion obtener la latitud y la longitud
     	
     	Coords coordenadas = dirLog.darCoordenadasDireccion(direccion, ciudad, depto);
-        
+        	
+    	
 
  /*       if(direccionesRepetidas){
 			return "Apartamento";		}
@@ -55,8 +61,10 @@ public class ClasificacionImagenes {
 
     //Metodo 1 mirar si hay direcciones repetidas en la base de datos
     //TODO VERIFICAR EN LA BASE DE DATOS, SI HAY REPETIDOS ES TRUE Y QUIERE DECIR QUE SE TIENE UN APTO
-    public boolean direccionesRepetidas() {
+    private boolean direccionesRepetidas(String direccion, String ciudad, String departamento) {
         //poner en la clase cliente el atributo direccion 
+    	
+    	List<ClienteEntity> lista = clientePersistence.findByDireccion(direccion,ciudad, departamento);
     	
     	
     	
@@ -85,7 +93,7 @@ public class ClasificacionImagenes {
 
     //Metodo 3 usar watson para la clasificacion de imagenes segun la latitud y longitud del predio
     @SuppressWarnings("static-access")
-    public String tipoPredio(double longitud, double latitud) throws IOException {
+    private String tipoPredio(double longitud, double latitud) throws IOException {
 
         URL url = new URL("https://maps.googleapis.com/maps/api/streetview?size=400x400&location=" + longitud + "," + latitud + "&fov=90&heading=235&pitch=10&key=AIzaSyCyhpCQfv5n_EeBBFTBxZMxSD633ul9I2o");
 

@@ -90,23 +90,15 @@ public class ClientePersistence {
         return em.find(ClienteEntity.class, clientesUsuario);
     }
 
-    public ClienteEntity findByDireccion(String direccion, String localidad, String departamento) {
+    public List<ClienteEntity> findByDireccion(String direccion, String localidad, String departamento) {
         LOGGER.log(Level.INFO, "Consultando busquedas por direccion ", direccion);
         TypedQuery query = em.createQuery("Select e From ClienteEntity e where e.direccion = :direccion, e.localidad = :localidad, e.departamento = :departamento", ClienteEntity.class);
         query = query.setParameter("direccion", direccion);
         query = query.setParameter("localidad", localidad);
         query = query.setParameter("departamento", departamento);
         List<ClienteEntity> sameDireccion = query.getResultList();
-        ClienteEntity result;
-        if (sameDireccion == null) {
-            result = null;
-        } else if (sameDireccion.isEmpty()) {
-            result = null;
-        } else {
-            result = sameDireccion.get(0);
-        }
         LOGGER.log(Level.INFO, "Saliendo de consultar busquedas por direccion ", direccion);
-        return result;
+        return sameDireccion;
     }
 
 }
