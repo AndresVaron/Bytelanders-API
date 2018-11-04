@@ -52,6 +52,7 @@ public class GeoActualizacionLogic {
                 clientePersistence.update(cliente);
                 LOGGER.log(Level.INFO, "Fin de actualizacion geoLocalizacion");
             }
+            
         }
         LOGGER.log(Level.INFO, "Saliendo del proceso de actualizar coordenadas geograficas.");
     }

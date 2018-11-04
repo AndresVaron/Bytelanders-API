@@ -21,6 +21,10 @@ public class ClienteEntity implements Serializable {
     private String latitud;
     
     private String cedula;
+    
+    
+    
+    
 
     /**
      * @return the usuario
