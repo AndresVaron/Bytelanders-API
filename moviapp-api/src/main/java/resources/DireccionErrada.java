@@ -6,11 +6,15 @@
 package resources;
 
 import dtos.BusquedaDTO;
+import entities.BusquedaEntity;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -31,15 +35,14 @@ import logic.DireccionErradaLogic;
 @RequestScoped
 public class DireccionErrada {
 
-    
     private static final Logger LOGGER = Logger.getLogger(DireccionErrada.class.getName());
 
     @Inject
     private DireccionErradaLogic direccionErrada; // Variable para acceder a la lógica de la aplicación. Es una inyección de dependencias.
 
     /**
-     * Processa una direccion equivocada y retorna las as coordenadas que 
-     * 
+     * Processa una direccion equivocada y retorna las as coordenadas que
+     *
      * @param direccion la direccion que se va a analizar.
      * @return Objeto que representa la respuesta de la busqueda.
      */
@@ -50,5 +53,36 @@ public class DireccionErrada {
         return new BusquedaDTO(direccionErrada.calcularDireccion(direccion));
     }
 
+    /**
+     * Busca y devuelve todos los libros que existen en la aplicacion.
+     *
+     * @return JSONArray {@link BookDetailDTO} - Los libros encontrados en la
+     * aplicación. Si no hay ninguno retorna una lista vacía.
+     */
+    @GET
+    public List<BusquedaDTO> getBusqueda() {
+        LOGGER.info("DireccionErradaResource getBusquedas: input: void");
+        List<BusquedaDTO> listaBusquedas = listEntity2DTO(direccionErrada.getBusquedas());
+        LOGGER.log(Level.INFO, "BookResource getBooks: output: {0}", listaBusquedas.toString());
+        return listaBusquedas;
+    }
+
+    /**
+     * Convierte una lista de entidades a DTO.
+     *
+     * Este método convierte una lista de objetos BookEntity a una lista de
+     * objetos BookDetailDTO (json)
+     *
+     * @param entityList corresponde a la lista de libros de tipo Entity que
+     * vamos a convertir a DTO.
+     * @return la lista de libros en forma DTO (json)
+     */
+    private List<BusquedaDTO> listEntity2DTO(List<BusquedaEntity> entityList) {
+        List<BusquedaDTO> list = new ArrayList<>();
+        for (BusquedaEntity entity : entityList) {
+            list.add(new BusquedaDTO(entity));
+        }
+        return list;
+    }
 
 }

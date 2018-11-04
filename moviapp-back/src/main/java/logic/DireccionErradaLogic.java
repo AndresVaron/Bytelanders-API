@@ -6,6 +6,7 @@
 package logic;
 
 import entities.BusquedaEntity;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
@@ -33,5 +34,9 @@ public class DireccionErradaLogic {
         busqueda = busquedaPersistence.create(busqueda);
         LOGGER.log(Level.INFO, "Saliendo del proceso de actualizar calcular Direccion");
         return busqueda;
+    }
+
+    public List<BusquedaEntity> getBusquedas() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

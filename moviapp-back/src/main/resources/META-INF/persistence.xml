@@ -8,9 +8,9 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes>  
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://172.24.99.21:5432/arquisicion" />
-            <property name="javax.persistence.jdbc.user" value="admin" />
-            <property name="javax.persistence.jdbc.password" value="admin123" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://ec2-54-185-253-170.us-west-2.compute.amazonaws.com:5432/sabanahack2018" />
+            <property name="javax.persistence.jdbc.user" value="hackata" />
+            <property name="javax.persistence.jdbc.password" value="SABANAHACK" />
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
             <property name="eclipselink.cache.type.default" value="NONE"/>
             <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
