@@ -30,6 +30,9 @@ public class ClasificacionImagenes {
 	@Inject
 	DireccionErradaLogic dirLog;
 	
+	@Inject
+	ClientePersistence clientePersistence;
+	
     /**
      * Metodo principal que integra todas las soluciones
      * @throws BusinessLogicException 
@@ -39,7 +42,8 @@ public class ClasificacionImagenes {
         //TODO Con la direccion obtener la latitud y la longitud
     	
     	Coords coordenadas = dirLog.darCoordenadasDireccion(direccion, ciudad, depto);
-        
+        	
+    	
 
  /*       if(direccionesRepetidas){
 			return "Apartamento";		}
@@ -58,7 +62,7 @@ public class ClasificacionImagenes {
     public boolean direccionesRepetidas() {
         //poner en la clase cliente el atributo direccion 
     	
-    	
+    	clientePersistence.findByDireccion()
     	
         return false;
     }
