@@ -1,12 +1,14 @@
 package entities;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 @Entity
 public class ClienteCompraEntity extends BaseEntity{
 
+        @Id
 	private String cliente;
 	
 	private boolean comprado;

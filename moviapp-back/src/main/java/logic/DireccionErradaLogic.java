@@ -346,6 +346,9 @@ public class DireccionErradaLogic {
     	List<ClienteCompraEntity> listaCompra =  clienteCompraPersistence.findComprasPendientes();
     	
     	//Por cada cliente en lista de compras debe buscar si se ha combrado su info.
+        
+        LOGGER.log(Level.INFO, listaCompra.size()+"");
+        
     	for(ClienteCompraEntity ce : listaCompra) {
     		
     		if(calcularDireccionLazy(ce.getCliente()) != null) {

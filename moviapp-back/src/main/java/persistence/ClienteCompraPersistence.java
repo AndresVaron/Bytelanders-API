@@ -11,7 +11,9 @@ import javax.persistence.Query;
 
 import entities.BusquedaEntity;
 import entities.ClienteCompraEntity;
+import javax.ejb.Stateless;
 
+@Stateless
 public class ClienteCompraPersistence {
 
 	 private static final Logger LOGGER = Logger.getLogger(BusquedaPersistence.class.getName());
@@ -31,7 +33,7 @@ public class ClienteCompraPersistence {
 	    
 	    public List<ClienteCompraEntity> findComprasPendientes() {
 	        LOGGER.log(Level.INFO, "Consultando todas las cliente compra persistence");
-	        Query q = em.createQuery("select u from ClienteCompraEntity u where comprado = false");
+	        Query q = em.createQuery("select u from ClienteCompraEntity u where u.comprado = 0");
 	        return q.getResultList();
 	    }
 	

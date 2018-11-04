@@ -30,6 +30,8 @@ INSERT INTO datosclientecompradoentity (nombre,cedula,direccionpredio,departamen
 
 COMMIT;
 
+select * from datosclientecompradoentity ;
 
+select * from ClienteComnpraPersistence;
 
 SELECT * FROM CLIENTEENTITY;
