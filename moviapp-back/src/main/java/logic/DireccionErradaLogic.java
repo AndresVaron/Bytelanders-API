@@ -101,7 +101,7 @@ public class DireccionErradaLogic {
     			return false;
     		}
         
-    		return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) >= 150.0;
+    		return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) <= 150.0;
     	}
     	catch(BusinessLogicException e) {
     		return false;
@@ -116,7 +116,7 @@ public class DireccionErradaLogic {
     		if (instalCoords == null) {
     			return false;
     		}
-    		return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) >= 150.0;
+    		return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) <= 150.0;
     	}
     	catch(BusinessLogicException e) {
     		return false;
@@ -277,7 +277,7 @@ public class DireccionErradaLogic {
 
                 enrango = predioEnRangoCaja(next.getDireccion(), next.getDireccionCaja(),
                         next.getLocalidad(), next.getDepartamento());
-                LOGGER.log(Level.INFO, "En rango: ");
+                LOGGER.log(Level.INFO, "En rango: " + enrango);
             }
 
             if (!enrango) {
