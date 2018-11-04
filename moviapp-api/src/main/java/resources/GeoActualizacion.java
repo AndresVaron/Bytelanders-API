@@ -11,6 +11,7 @@ import entities.BusquedaEntity;
 import entities.GeoActualizadoEntity;
 import exceptions.BusinessLogicException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -45,9 +46,10 @@ public class GeoActualizacion {
      *
      * @param geo clase que representa el objeto ingresado por parametro.
      * @throws BusinessLogicException 
+     * @throws IOException 
      */
     @POST
-    public void verificacion(GeoDTO geo) throws BusinessLogicException {
+    public void verificacion(GeoDTO geo) throws BusinessLogicException, IOException {
         LOGGER.log(Level.INFO, "GeoActualizacionResource verificacion: input: {0}", geo);
         geoLogic.actualizacionGeografica(geo.getLongitud(), geo.getLatitud(), geo.getCorreo(), geo.getIp());
     }

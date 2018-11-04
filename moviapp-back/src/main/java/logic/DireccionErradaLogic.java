@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import persistence.BusquedaPersistence;
-
+import persistence.ClienteCompraPersistence;
 import persistence.BusquedaPersistence;
 import persistence.ClientePersistence;
 import persistence.DatosClienteCompradoPersistence;
@@ -46,6 +46,9 @@ public class DireccionErradaLogic {
     
     @Inject
     private DatosClienteCompradoPersistence datosCompradoPersistence;
+    
+    @Inject
+    private ClienteCompraPersistence clienteCompraPersistence;
 
     
     private final Logger LOGGER = Logger.getLogger(GeoActualizacionLogic.class.getName());
@@ -268,14 +271,18 @@ public class DireccionErradaLogic {
 
             if (!enrango) {
                 next.setErrada(true);
-                ClienteCompraEntity compra = new ClienteCompraEntity();
-                compra.setCliente(next);
-                compra.setComprado(false);
-                calcularDireccionLazy(next);
-                compra.setComprado(true);
-                        
-                //TODO COMPRAR Y ACTUALIZAR
-                //LUEGO SE CREA ENTIDAD DE BUSQUEDA
+                 
+                //Si sí usa la App, eventualmente se actualizará. No importa.
+                if(!next.isUsaApp()) {
+                
+                	ClienteCompraEntity compra = new ClienteCompraEntity();
+                	compra.setCliente(next);
+                	compra.setComprado(false);
+                	calcularDireccionLazy(next);
+                	compra.setComprado(true);
+                		
+                	clienteCompraPersistence.create(compra);
+                }
                 
                 
             } else {
@@ -292,19 +299,39 @@ public class DireccionErradaLogic {
         }
     }
     
-    public ClienteEntity calcularDireccionLazy(ClienteEntity cliente) throws BusinessLogicException {
+    public void recalcularInfoClientesCompras() throws BusinessLogicException{
+    	
+    	List<ClienteCompraEntity> listaCompra =  clienteCompraPersistence.findComprasPendientes();
+    	
+    	//Por cada cliente en lista de compras debe buscar si se ha combrado su info.
+    	for(ClienteCompraEntity ce : listaCompra) {
+    		
+    		if(calcularDireccionLazy(ce.getCliente()) != null) {
+    			ce.setComprado(true);
+    			clienteCompraPersistence.update(ce);
+    		}
+    		
+    	}
+    }
+    
+    
+    private ClienteEntity calcularDireccionLazy(ClienteEntity cliente) throws BusinessLogicException {
         DatosClienteCompradoEntity datos =datosCompradoPersistence.find(cliente.getCedula());
+        
+        if(datos == null) {
+        	return null;
+        }
+        
         String[] direcciones = datos.getDireccionPredio().split(",");
         for (int i = 0; i < direcciones.length; i++) {
             if(predioEnRangoCaja(direcciones[i], cliente.getDireccionCaja(), cliente.getLocalidad(), cliente.getDepartamento())){
-            Coords coords = addressCoords(direcciones[i], datos.getDepartamento(), datos.getCiudad());
-            cliente.setLongitud(""+coords.getLng());
-            cliente.setLatitud(""+coords.getLat());
-            cliente.setDireccion(direcciones[i]);
-            cliente.setErrada(false);
-              clientePersistence.update(cliente);
-              i=direcciones.length;
-                
+            	Coords coords = addressCoords(direcciones[i], datos.getDepartamento(), datos.getCiudad());
+            	cliente.setLongitud(""+coords.getLng());
+            	cliente.setLatitud(""+coords.getLat());
+            	cliente.setDireccion(direcciones[i]);
+            	cliente.setErrada(false);
+            	clientePersistence.update(cliente);
+            	i=direcciones.length;     
             }
         }
        LOGGER.log(Level.INFO, "Saliendo del proceso de actualizar calcular Direccion");

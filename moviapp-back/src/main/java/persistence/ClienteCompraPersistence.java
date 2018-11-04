@@ -29,7 +29,7 @@ public class ClienteCompraPersistence {
 	        return compraEntity;
 	    }
 	    
-	    public List<BusquedaEntity> findComprasPendientes() {
+	    public List<ClienteCompraEntity> findComprasPendientes() {
 	        LOGGER.log(Level.INFO, "Consultando todas las busquedas");
 	        Query q = em.createQuery("select u from BusquedaEntity u where comprado = false");
 	        return q.getResultList();

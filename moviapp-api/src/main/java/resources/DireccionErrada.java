@@ -7,6 +7,9 @@ package resources;
 
 import dtos.BusquedaDTO;
 import entities.BusquedaEntity;
+import exceptions.BusinessLogicException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -53,6 +56,21 @@ public class DireccionErrada {
         return new BusquedaDTO(direccionErrada.calcularDireccion(direccion, localidad, departamento));
     }
 
+    @POST
+    @Path("deterradas")
+    public void determinarDireccionesIncorrectas() throws BusinessLogicException, IOException {
+    	
+    	LOGGER.log(Level.INFO, "Determinando direcciones erradas.");
+    	direccionErrada.asignarErrados();
+    }
+    
+    @POST
+    @Path("estimarCatastro")
+    public void estimarNuevaDireccionConCatastro() throws BusinessLogicException {
+    	LOGGER.log(Level.INFO, "Determinando direcciones con catastro.");
+    	direccionErrada.recalcularInfoClientesCompras();
+    }
+    
     /**
      * Busca y devuelve todos los libros que existen en la aplicacion.
      *
