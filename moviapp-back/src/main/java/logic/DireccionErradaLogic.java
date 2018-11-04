@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import persistence.BusquedaPersistence;
 
 import persistence.BusquedaPersistence;
 import persistence.ClientePersistence;
@@ -39,10 +40,10 @@ public class DireccionErradaLogic {
 
     private final Logger LOGGER = Logger.getLogger(GeoActualizacionLogic.class.getName());
 
-    public BusquedaEntity calcularDireccion(String direccion) {
+    public BusquedaEntity calcularDireccion(String direccion,String localidad, String departamento) {
         LOGGER.info("Inicia proceso de calcular la busqueda de la direccion");
         BusquedaEntity busqueda = null;
-        ClienteEntity cliente = clientePersistence.findByDireccion(direccion);
+        ClienteEntity cliente = clientePersistence.findByDireccion(direccion,localidad,departamento);
         if (cliente != null) {
             //Es cliente de la aplicacion
             busqueda = busquedaPersistence.findByDireccion(direccion);

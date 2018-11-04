@@ -47,11 +47,11 @@ public class DireccionErrada {
      * @return Objeto que representa la respuesta de la busqueda.
      */
     @POST
-    @Path("{direccion}")
-   /* public BusquedaDTO calcularDireccion(@PathParam("direccion") String direccion) {
+    @Path("{direccion}/{localidad}/{departamento}")
+    public BusquedaDTO calcularDireccion(@PathParam("direccion") String direccion, @PathParam("localidad") String localidad, @PathParam("departamento") String departamento) {
         LOGGER.log(Level.INFO, "DireccionErradaResource direccion: input: {0}", direccion);
-        return new BusquedaDTO(direccionErrada.calcularDireccion(direccion));
-    }*/
+        return new BusquedaDTO(direccionErrada.calcularDireccion(direccion, localidad, departamento));
+    }
 
     /**
      * Busca y devuelve todos los libros que existen en la aplicacion.
@@ -59,13 +59,13 @@ public class DireccionErrada {
      * @return JSONArray {@link BookDetailDTO} - Los libros encontrados en la
      * aplicación. Si no hay ninguno retorna una lista vacía.
      */
-   /* @GET
+    @GET
     public List<BusquedaDTO> getBusqueda() {
         LOGGER.info("DireccionErradaResource getBusquedas: input: void");
         List<BusquedaDTO> listaBusquedas = listEntity2DTO(direccionErrada.getBusquedas());
         LOGGER.log(Level.INFO, "BookResource getBooks: output: {0}", listaBusquedas.toString());
         return listaBusquedas;
-    }*/
+    }
 
     /**
      * Convierte una lista de entidades a DTO.
