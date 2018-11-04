@@ -91,28 +91,37 @@ public class DireccionErradaLogic {
         return busquedas;
     }
 
-    public boolean predioEnRangoCaja(String addrrPredio, String addrrCaja, String ciudad, String depto) throws BusinessLogicException {
+    public boolean predioEnRangoCaja(String addrrPredio, String addrrCaja, String ciudad, String depto){
 
-        Coords boxCoords = addressCoords(formatAddress(addrrCaja), formatDept(depto, ciudad), formatCity(ciudad));
-        Coords instalCoords = addressCoords(formatAddress(addrrPredio), formatDept(depto, ciudad), formatCity(ciudad));
+    	try {
+    		Coords boxCoords = addressCoords(formatAddress(addrrCaja), formatDept(depto, ciudad), formatCity(ciudad));
+    		Coords instalCoords = addressCoords(formatAddress(addrrPredio), formatDept(depto, ciudad), formatCity(ciudad));
 
-        if (boxCoords == null || instalCoords == null) {
-            return false;
-        }
-
-        return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) >= 150.0;
-
+    		if (boxCoords == null || instalCoords == null) {
+    			return false;
+    		}
+        
+    		return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) >= 150.0;
+    	}
+    	catch(BusinessLogicException e) {
+    		return false;
+    	}
     }
 
-    public boolean predioEnRangoCaja(String addrrPredio, Coords boxCoords, String ciudad, String depto) throws BusinessLogicException {
+    public boolean predioEnRangoCaja(String addrrPredio, Coords boxCoords, String ciudad, String depto){
 
-        Coords instalCoords = addressCoords(formatAddress(addrrPredio), formatDept(depto, ciudad), formatCity(ciudad));
+    	try {
+    		Coords instalCoords = addressCoords(formatAddress(addrrPredio), formatDept(depto, ciudad), formatCity(ciudad));
 
-        if (instalCoords == null) {
-            return false;
-        }
+    		if (instalCoords == null) {
+    			return false;
+    		}
+    		return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) >= 150.0;
+    	}
+    	catch(BusinessLogicException e) {
+    		return false;
+    	}
 
-        return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) >= 150.0;
 
     }
 
@@ -239,7 +248,8 @@ public class DireccionErradaLogic {
     public void asignarErrados() throws BusinessLogicException, IOException {
         List<ClienteEntity> clientes = clientePersistence.findAll();
         for (Iterator<ClienteEntity> iterator = clientes.iterator(); iterator.hasNext();) {
-            ClienteEntity next = iterator.next();
+            
+        	ClienteEntity next = iterator.next();
 
             //Si la dirección ya contiene las coordenadas, aproveche.
             if (next.getDireccion().contains("lat:") && next.getDireccion().contains("lon:")) {
