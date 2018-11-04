@@ -98,7 +98,7 @@ public class DireccionErradaLogic {
 		return newS;
 	}
 
-	private Coords addressCoords(String address, String dept,String city) {
+	public Coords addressCoords(String address, String dept,String city) {
 		
 		HttpURLConnection con = null;
 
@@ -213,6 +213,9 @@ public class DireccionErradaLogic {
                 next.setErrada(true);
                }
                else{
+                   Coords coords = addressCoords(next.getDireccion(), next.getDepartamento(), next.getLocalidad());
+                   next.setLongitud(""+coords.getLng());
+                   next.setLatitud(""+coords.getLat());
                    next.setErrada(false);
                }
                

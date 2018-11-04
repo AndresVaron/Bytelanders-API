@@ -32,11 +32,15 @@ public class ClienteEntity implements Serializable {
 
     private String barrio;
     
-    private String coordenadaCaja;
+    private String longitudCaja;
     
+   private String latitudCaja;
+   
     private boolean errada;
     
     private boolean usaApp;
+    
+    private String tipoPredio;
     
     
     
@@ -181,20 +185,7 @@ public class ClienteEntity implements Serializable {
         this.barrio = barrio;
     }
 
-    /**
-     * @return the coordenadaCaja
-     */
-    public String getCoordenadaCaja() {
-        return coordenadaCaja;
-    }
-
-    /**
-     * @param coordenadaCaja the coordenadaCaja to set
-     */
-    public void setCoordenadaCaja(String coordenadaCaja) {
-        this.coordenadaCaja = coordenadaCaja;
-    }
-
+   
     /**
      * @return the errada
      */
@@ -221,6 +212,48 @@ public class ClienteEntity implements Serializable {
      */
     public void setUsaApp(boolean usaApp) {
         this.usaApp = usaApp;
+    }
+
+    /**
+     * @return the longitudCaja
+     */
+    public String getLongitudCaja() {
+        return longitudCaja;
+    }
+
+    /**
+     * @param longitudCaja the longitudCaja to set
+     */
+    public void setLongitudCaja(String longitudCaja) {
+        this.longitudCaja = longitudCaja;
+    }
+
+    /**
+     * @return the latitudCaja
+     */
+    public String getLatitudCaja() {
+        return latitudCaja;
+    }
+
+    /**
+     * @param latitudCaja the latitudCaja to set
+     */
+    public void setLatitudCaja(String latitudCaja) {
+        this.latitudCaja = latitudCaja;
+    }
+
+    /**
+     * @return the tipoPredio
+     */
+    public String getTipoPredio() {
+        return tipoPredio;
+    }
+
+    /**
+     * @param tipoPredio the tipoPredio to set
+     */
+    public void setTipoPredio(String tipoPredio) {
+        this.tipoPredio = tipoPredio;
     }
     
     
