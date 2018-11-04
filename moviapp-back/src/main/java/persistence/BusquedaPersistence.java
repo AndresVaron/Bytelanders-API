@@ -33,7 +33,9 @@ public class BusquedaPersistence {
      */
     public BusquedaEntity create(BusquedaEntity busquedaEntity) {
         LOGGER.log(Level.INFO, "Creando una busqueda nueva");
+        em.getTransaction().begin();
         em.persist(busquedaEntity);
+        em.getTransaction().commit();
         LOGGER.log(Level.INFO, "Busqueda creada");
         return busquedaEntity;
     }
@@ -71,7 +73,11 @@ public class BusquedaPersistence {
      */
     public BusquedaEntity update(BusquedaEntity busquedaEntity) {
         LOGGER.log(Level.INFO, "Actualizando la busqueda con id={0}", busquedaEntity.getId());
-        return em.merge(busquedaEntity);
+        em.getTransaction().begin();
+        busquedaEntity = em.merge(busquedaEntity);
+        em.getTransaction().commit();
+
+        return busquedaEntity;
     }
 
     /**
@@ -83,8 +89,10 @@ public class BusquedaPersistence {
      */
     public void delete(Long busquedasId) {
         LOGGER.log(Level.INFO, "Borrando el busqueda con id={0}", busquedasId);
+        em.getTransaction().begin();
         BusquedaEntity busquedaEntity = em.find(BusquedaEntity.class, busquedasId);
         em.remove(busquedaEntity);
+        em.getTransaction().commit();
     }
 
     /**

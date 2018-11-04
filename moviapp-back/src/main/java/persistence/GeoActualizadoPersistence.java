@@ -11,8 +11,8 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 /**
- * Clase que maneja la persistencia para GeoActualizados. Se conecta a través del
- * Entity Manager de javax.persistance con la base de datos SQL.
+ * Clase que maneja la persistencia para GeoActualizados. Se conecta a través
+ * del Entity Manager de javax.persistance con la base de datos SQL.
  *
  * @author ByteLanders
  */
@@ -27,12 +27,15 @@ public class GeoActualizadoPersistence {
     /**
      * Método para persisitir la entidad en la base de datos.
      *
-     * @param geoactualizadoEntity objeto geoactualizado que se creará en la base de datos
+     * @param geoactualizadoEntity objeto geoactualizado que se creará en la
+     * base de datos
      * @return devuelve la entidad creada con una id dado por la base de datos.
      */
     public GeoActualizadoEntity create(GeoActualizadoEntity geoactualizadoEntity) {
         LOGGER.log(Level.INFO, "Creando una geoactualizado nueva");
+        em.getTransaction().begin();
         em.persist(geoactualizadoEntity);
+        em.getTransaction().commit();
         LOGGER.log(Level.INFO, "GeoActualizado creada");
         return geoactualizadoEntity;
     }
@@ -40,8 +43,8 @@ public class GeoActualizadoPersistence {
     /**
      * Devuelve todas las geoactualizados de la base de datos.
      *
-     * @return una lista con todas las geoactualizados que encuentre en la base de
-     * datos.
+     * @return una lista con todas las geoactualizados que encuentre en la base
+     * de datos.
      */
     public List<GeoActualizadoEntity> findAll() {
         LOGGER.log(Level.INFO, "Consultando todas las geoactualizados");
@@ -63,26 +66,32 @@ public class GeoActualizadoPersistence {
     /**
      * Actualiza una geoactualizado.
      *
-     * @param geoactualizadoEntity: la geoactualizado que viene con los nuevos cambios. Por
-     * ejemplo el nombre pudo cambiar. En ese caso, se haria uso del método
-     * update.
+     * @param geoactualizadoEntity: la geoactualizado que viene con los nuevos
+     * cambios. Por ejemplo el nombre pudo cambiar. En ese caso, se haria uso
+     * del método update.
      * @return una geoactualizado con los cambios aplicados.
      */
     public GeoActualizadoEntity update(GeoActualizadoEntity geoactualizadoEntity) {
         LOGGER.log(Level.INFO, "Actualizando la geoactualizado con id={0}", geoactualizadoEntity.getId());
-        return em.merge(geoactualizadoEntity);
+        em.getTransaction().begin();
+        geoactualizadoEntity = em.merge(geoactualizadoEntity);
+        em.getTransaction().commit();
+        return geoactualizadoEntity;
     }
 
     /**
      *
-     * Borra una geoactualizado de la base de datos recibiendo como argumento el id
-     * del geoactualizado
+     * Borra una geoactualizado de la base de datos recibiendo como argumento el
+     * id del geoactualizado
      *
-     * @param geoactualizadosId: id correspondiente a la geoactualizado a borrar.
+     * @param geoactualizadosId: id correspondiente a la geoactualizado a
+     * borrar.
      */
     public void delete(Long geoactualizadosId) {
         LOGGER.log(Level.INFO, "Borrando el geoactualizado con id={0}", geoactualizadosId);
+        em.getTransaction().begin();
         GeoActualizadoEntity geoactualizadoEntity = em.find(GeoActualizadoEntity.class, geoactualizadosId);
         em.remove(geoactualizadoEntity);
+        em.getTransaction().commit();
     }
 }
