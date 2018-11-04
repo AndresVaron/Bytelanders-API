@@ -30,6 +30,7 @@ import persistence.ClientePersistence;
  */
 @Stateless
 public class DireccionErradaLogic {
+	
     @Inject 
     ClientePersistence clientePersistence;
 	
@@ -210,6 +211,25 @@ public class DireccionErradaLogic {
            for (Iterator<ClienteEntity> iterator = clientes.iterator(); iterator.hasNext();) {
                ClienteEntity next = iterator.next();
                
+               //Si la dirección ya contiene las coordenadas, aproveche.
+               
+               if(next.getDireccion().contains("lat:") && next.getDireccion().contains("lon:")) {
+            	   
+            	   String[] s = next.getDireccion().split(" ");
+            	   
+            	   next.setLatitud(s[next.getDireccion().length()-2]);
+            	   next.setLongitud(s[next.getDireccion().length()-1]);
+
+                   clientePersistence.update(next);
+                   continue;
+               }
+               
+               
+               
+               
+               
+               
+               
                boolean errado = true;
                
                if (next.getLongitud()!= null && next.getLatitud() != null) {
@@ -225,7 +245,6 @@ public class DireccionErradaLogic {
             			   next.getLocalidad(), next.getDepartamento());
                }
                
-               
                if(!errado){
                 next.setErrada(true);
                }
@@ -237,7 +256,9 @@ public class DireccionErradaLogic {
                    
                    //TODO, debería determinar tipo de predio.
                }
-               
+               //update
+               clientePersistence.update(next);
+                                                        
            }
        }
 }

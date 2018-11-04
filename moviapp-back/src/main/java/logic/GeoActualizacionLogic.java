@@ -8,6 +8,8 @@ package logic;
 import entities.BusquedaEntity;
 import entities.ClienteEntity;
 import entities.GeoActualizadoEntity;
+import exceptions.BusinessLogicException;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,9 +33,14 @@ public class GeoActualizacionLogic {
     @Inject
     private GeoActualizadoPersistence geoPersistence;
 
-    public void actualizacionGeografica(String longitud, String latitud, String correo, String ip) {
-        //Se asume que el cliente ya existe. 
+    public void actualizacionGeografica(String longitud, String latitud, String correo, String ip) throws BusinessLogicException {
+    	
         ClienteEntity cliente = clientePersistence.find(correo);
+        
+        if(cliente == null) {
+        	throw new BusinessLogicException("El cliente que se ha intentado verificar no existe");
+        }
+        
         LOGGER.log(Level.INFO, "Inicia proceso de actualizar las coordenas geograficas");
         
         if (cliente.isErrada()) {        	
