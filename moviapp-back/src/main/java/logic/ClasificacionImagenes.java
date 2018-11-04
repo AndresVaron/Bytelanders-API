@@ -33,7 +33,6 @@ public class ClasificacionImagenes {
 		double lat = 0;
 		double lon = 0;
 
-		String tipo = "";
 		if(direccionesRepetidas){
 			return "Apartamento";
 		}
@@ -67,7 +66,7 @@ public class ClasificacionImagenes {
 		for(int i = 0; i < palabrasApartamento.length; i ++){
 			if(direccion.contains(palabrasCasa[i])){
 				ans = "Casa";
-				break;
+				break; 
 			}
 			else if(direccion.contains(palabrasApartamento[i])){
 				ans = "Apartamento";
