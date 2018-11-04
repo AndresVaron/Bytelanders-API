@@ -5,7 +5,16 @@ public class Coords {
 	private Double lat;
 	
 	private Double lng;
-
+	
+	public Coords() {
+		
+	}
+	
+	public Coords(Double lat, Double lng) {
+		this.lat = lat;
+		this.lng = lng;
+	}
+	
 	public Double getLat() {
 		return lat;
 	}

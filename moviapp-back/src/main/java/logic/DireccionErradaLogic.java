@@ -209,7 +209,24 @@ public class DireccionErradaLogic {
            List<ClienteEntity> clientes = clientePersistence.findAll();
            for (Iterator<ClienteEntity> iterator = clientes.iterator(); iterator.hasNext();) {
                ClienteEntity next = iterator.next();
-               if(!predioEnRangoCaja(next.getDireccion(), next.getDireccionCaja(), next.getLocalidad()  , next.getDepartamento())){
+               
+               boolean errado = true;
+               
+               if (next.getLongitud()!= null && next.getLatitud() != null) {
+            	   Coords coord = new Coords(Double.parseDouble(next.getLatitud()), 
+            			   Double.parseDouble(next.getLongitud()));
+            	   
+            	   errado = predioEnRangoCaja(next.getDireccion(), coord, next.getDepartamento(),
+            			   next.getLocalidad());
+               }
+               else {
+            	   
+            	   errado = predioEnRangoCaja(next.getDireccion(), next.getIpModem(), 
+            			   next.getLocalidad(), next.getDepartamento());
+               }
+               
+               
+               if(!errado){
                 next.setErrada(true);
                }
                else{
@@ -217,6 +234,8 @@ public class DireccionErradaLogic {
                    next.setLongitud(""+coords.getLng());
                    next.setLatitud(""+coords.getLat());
                    next.setErrada(false);
+                   
+                   //TODO, debería determinar tipo de predio.
                }
                
            }

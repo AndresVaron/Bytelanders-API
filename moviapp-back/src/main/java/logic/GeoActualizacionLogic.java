@@ -36,9 +36,7 @@ public class GeoActualizacionLogic {
         ClienteEntity cliente = clientePersistence.find(correo);
         LOGGER.log(Level.INFO, "Inicia proceso de actualizar las coordenas geograficas");
         
-        
-        if (cliente.isErrada()) {
-        	
+        if (cliente.isErrada()) {        	
         	LOGGER.log(Level.INFO, "Posicion Diferente");
             //Se simula la verificacion de que la ip del cliente esta en el rango de ips de su modem.
             if (cliente.getIpModem().equals(ip)) {
@@ -48,13 +46,23 @@ public class GeoActualizacionLogic {
                 GeoActualizadoEntity geoActualizado = new GeoActualizadoEntity();
                 geoActualizado.setLatitud(latitud);
                 geoActualizado.setLongitud(longitud);
+                
                 //Tipo Predio 
                 String tipoPredio = null;
+                
+                //TODO, determinar tipo de predio. Esto también se debe realizar si la dirección
+                //se determina correcta en el gran recorrido inicial.
+                
+                
+                
                 geoActualizado.setTipoPredio(tipoPredio);
+                //TODO, cliente set tipo de predio. En algún otro lado también???
+                //Se ha actualizado la dirección. Ahora no debe estar errada.
+                cliente.setErrada(false);
+                
                 geoPersistence.create(geoActualizado);
                 clientePersistence.update(cliente);
-                LOGGER.log(Level.INFO, "Fin de actualizacion geoLocalizacion");
-            
+                LOGGER.log(Level.INFO, "Fin de actualizacion geoLocalizacion");    
             }
             
         }
