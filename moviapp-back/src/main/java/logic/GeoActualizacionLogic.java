@@ -10,6 +10,7 @@ import entities.ClienteEntity;
 import entities.GeoActualizadoEntity;
 import exceptions.BusinessLogicException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,8 +33,11 @@ public class GeoActualizacionLogic {
 
     @Inject
     private GeoActualizadoPersistence geoPersistence;
+    
+    @Inject
+    private ClasificacionImagenes clasIms;
 
-    public void actualizacionGeografica(String longitud, String latitud, String correo, String ip) throws BusinessLogicException {
+    public void actualizacionGeografica(String longitud, String latitud, String correo, String ip) throws BusinessLogicException, IOException {
     	
         ClienteEntity cliente = clientePersistence.find(correo);
         
@@ -55,16 +59,13 @@ public class GeoActualizacionLogic {
                 geoActualizado.setLongitud(longitud);
                 
                 //Tipo Predio 
-                String tipoPredio = null;
+                String tipoPredio = clasIms.identificacionPredio(cliente.getDireccion(), cliente.getLocalidad(), cliente.getDepartamento());
                 
-                //TODO, determinar tipo de predio. Esto también se debe realizar si la dirección
+                //determinar tipo de predio. Esto también se debe realizar si la dirección
                 //se determina correcta en el gran recorrido inicial.
-                
-                
-                
+                cliente.setTipoPredio(tipoPredio);
                 geoActualizado.setTipoPredio(tipoPredio);
-                //TODO, cliente set tipo de predio. En algún otro lado también???
-                //Se ha actualizado la dirección. Ahora no debe estar errada.
+                
                 cliente.setErrada(false);
                 
                 geoPersistence.create(geoActualizado);

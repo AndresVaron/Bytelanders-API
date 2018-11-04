@@ -2,10 +2,12 @@ package logic;
 
 import java.awt.BorderLayout;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
@@ -29,9 +31,7 @@ import persistence.ClientePersistence;
 
 public class ClasificacionImagenes {
 
-	@Inject
-	private DireccionErradaLogic dirLog;
-	
+
 	@Inject
 	private ClientePersistence clientePersistence;
 	
@@ -41,10 +41,6 @@ public class ClasificacionImagenes {
      */
     public String identificacionPredio(String direccion, String ciudad, String depto) throws IOException, BusinessLogicException {
 
-        //TODO Con la direccion obtener la latitud y la longitud
-    	
-    	Coords coordenadas = dirLog.darCoordenadasDireccion(direccion, ciudad, depto);
-        	
     	if(direccionesRepetidas(direccion, ciudad, depto)){
     		return "Multifamiliar";
     	}
@@ -54,8 +50,10 @@ public class ClasificacionImagenes {
     		return op2;
     	}
     	
-    	else
-    		return tipoPredio(coordenadas.getLng(), coordenadas.getLat());
+    	//Con la direccion obtener la latitud y la longitud
+    	Coords coordenadas = darCoordenadasDireccion(direccion, ciudad, depto);
+        	
+    	return tipoPredio(coordenadas.getLng(), coordenadas.getLat());
 
     }
 
@@ -144,6 +142,101 @@ public class ClasificacionImagenes {
         }
         return respuesta;
     }
+    
+    public Coords darCoordenadasDireccion(String addrr, String city, String dept) throws BusinessLogicException {
+    	return addressCoords(formatAddress(addrr), formatDept(dept, city), formatCity(city));
+    }
+    
+
+    private String formatDept(String dept, String city) {
+        return (city.equals("Bogota")) ? "" : ",+" + dept;
+    }
+
+    private String formatCity(String city) {
+        return ",+" + city;
+    }
+
+    private String formatAddress(String oAddress) throws BusinessLogicException {
+
+        String[] partes = oAddress.split(" ");
+
+        String newS = "";
+        if (partes[0].equals("Calle")) {
+            newS += "Cl.";
+        } else if (partes[0].equals("Carrera")) {
+            newS += "Cra.";
+        } else if (partes[0].equals("Diagonal")) {
+            newS += "Dg.";
+        } else if (partes[0].equals("Transversal")) {
+            newS += "Tv.";
+        } else {
+            throw new BusinessLogicException("El formato de dirección no se reconoció");
+        }
+
+        String[] endNums = partes[2].split("-");
+        String endNum = endNums[0] + endNums[1];
+
+        String mainNum = partes[1].split("#")[0];
+
+        newS += ("+" + mainNum + "+" + endNum);
+
+        return newS;
+    }
+    
+    private Coords addressCoords(String address, String dept, String city) {
+
+        HttpURLConnection con = null;
+
+        Coords coords = new Coords();
+
+        try {
+            URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?address=" + address + city + dept + "&key=AIzaSyCyhpCQfv5n_EeBBFTBxZMxSD633ul9I2o");
+            con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);
+            con.setInstanceFollowRedirects(true);
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+
+            boolean expectingCoords = false;
+            boolean latDone = false;
+            boolean lngDone = false;
+
+            while ((inputLine = in.readLine()) != null) {
+                if (inputLine.contains("location")) {
+                    expectingCoords = true;
+                }
+                if (expectingCoords && inputLine.contains("lat")) {
+                    latDone = true;
+                    double lat = Double.parseDouble(inputLine.substring(0, inputLine.length() - 1).split(":")[1]);
+                    coords.setLat(lat);
+                }
+                if (expectingCoords && inputLine.contains("lng")) {
+                    lngDone = true;
+                    double lng = Double.parseDouble(inputLine.substring(0, inputLine.length() - 1).split(":")[1]);
+                    coords.setLng(lng);
+                }
+                if (latDone && lngDone) {
+                    break;
+                }
+
+            }
+
+        } catch (IOException ioe) {
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                con.disconnect();
+            }
+        }
+        return coords;
+    }
+
 
     /*public static void main(String[] args) throws IOException {
 

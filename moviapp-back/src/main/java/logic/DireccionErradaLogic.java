@@ -36,8 +36,11 @@ public class DireccionErradaLogic {
     ClientePersistence clientePersistence;
 
     @Inject
-    BusquedaPersistence busquedaPersistence;
+    private BusquedaPersistence busquedaPersistence;
 
+    @Inject
+    private ClasificacionImagenes clasIms;
+    
     private final Logger LOGGER = Logger.getLogger(GeoActualizacionLogic.class.getName());
 
     public BusquedaEntity calcularDireccion(String direccion,String localidad, String departamento) {
@@ -98,10 +101,6 @@ public class DireccionErradaLogic {
 
         return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) >= 150.0;
 
-    }
-    
-    public Coords darCoordenadasDireccion(String addrr, String city, String dept) throws BusinessLogicException {
-    	return addressCoords(formatAddress(addrr), formatDept(dept, city), formatCity(city));
     }
 
     private String formatDept(String dept, String city) {
@@ -224,7 +223,7 @@ public class DireccionErradaLogic {
         return Math.sqrt(distance);
     }
 
-    public void asignarErrados() throws BusinessLogicException {
+    public void asignarErrados() throws BusinessLogicException, IOException {
         List<ClienteEntity> clientes = clientePersistence.findAll();
         for (Iterator<ClienteEntity> iterator = clientes.iterator(); iterator.hasNext();) {
             ClienteEntity next = iterator.next();
@@ -237,6 +236,8 @@ public class DireccionErradaLogic {
                 next.setLatitud(s[next.getDireccion().length() - 2]);
                 next.setLongitud(s[next.getDireccion().length() - 1]);
                 //ACTUALIZAR PREDIO
+                next.setTipoPredio(clasIms.identificacionPredio(next.getDireccion(), next.getLocalidad(), next.getDepartamento()));
+                
                 clientePersistence.update(next);
                 continue;
             }
@@ -260,13 +261,15 @@ public class DireccionErradaLogic {
 
                 //TODO COMPRAR Y ACTUALIZAR
                 //LUEGO SE CREA ENTIDAD DE BUSQUEDA
+                
+                
             } else {
                 Coords coords = addressCoords(next.getDireccion(), next.getDepartamento(), next.getLocalidad());
                 next.setLongitud("" + coords.getLng());
                 next.setLatitud("" + coords.getLat());
                 next.setErrada(false);
 
-                //TODO, debería determinar tipo de predio.
+                next.setTipoPredio(clasIms.identificacionPredio(next.getDireccion(), next.getLocalidad(), next.getDepartamento()));
             }
             //update
             clientePersistence.update(next);
