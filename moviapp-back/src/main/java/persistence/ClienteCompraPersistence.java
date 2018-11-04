@@ -21,26 +21,26 @@ public class ClienteCompraPersistence {
 	    
 	    
 	    public ClienteCompraEntity create(ClienteCompraEntity compraEntity) {
-	        LOGGER.log(Level.INFO, "Creando una busqueda nueva");
+	    	LOGGER.log(Level.INFO, "Creando cliente compra persistence");
 	        em.getTransaction().begin();
 	        em.persist(compraEntity);
 	        em.getTransaction().commit();
-	        LOGGER.log(Level.INFO, "Busqueda creada");
+	        LOGGER.log(Level.INFO, "Creando cliente compra creado");
 	        return compraEntity;
 	    }
 	    
 	    public List<ClienteCompraEntity> findComprasPendientes() {
-	        LOGGER.log(Level.INFO, "Consultando todas las busquedas");
+	        LOGGER.log(Level.INFO, "Consultando todas las cliente compra persistence");
 	        Query q = em.createQuery("select u from BusquedaEntity u where comprado = false");
 	        return q.getResultList();
 	    }
 	
-             public ClienteCompraEntity update(ClienteCompraEntity clienteEntity) {
-        LOGGER.log(Level.INFO, "Actualizando cliente con usuario = {0}", clienteEntity.getCliente().getUsuario());
-        em.getTransaction().begin();
-        clienteEntity = em.merge(clienteEntity);
-        em.getTransaction().commit();
-        LOGGER.log(Level.INFO, "Saliendo de actualizar el cliente con usuario = {0}", clienteEntity.getCliente().getUsuario());
-        return clienteEntity;
+        public ClienteCompraEntity update(ClienteCompraEntity clienteEntity) {
+        	LOGGER.log(Level.INFO, "Actualizando cliente con usuario = {0}", clienteEntity.getCliente());
+        	em.getTransaction().begin();
+        	clienteEntity = em.merge(clienteEntity);
+        	em.getTransaction().commit();
+        	LOGGER.log(Level.INFO, "Saliendo de actualizar el cliente con usuario = {0}", clienteEntity.getCliente());
+        	return clienteEntity;
     }
 }

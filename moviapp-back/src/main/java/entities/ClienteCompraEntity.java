@@ -7,8 +7,7 @@ import javax.persistence.OneToOne;
 @Entity
 public class ClienteCompraEntity extends BaseEntity{
 
-	@JoinColumn(name = "ClienteEntity")
-	private ClienteEntity cliente;
+	private String cliente;
 	
 	private boolean comprado;
 	
@@ -16,11 +15,11 @@ public class ClienteCompraEntity extends BaseEntity{
 	
 	}
 
-	public ClienteEntity getCliente() {
+	public String getCliente() {
 		return cliente;
 	}
 
-	public void setCliente(ClienteEntity cliente) {
+	public void setCliente(String cliente) {
 		this.cliente = cliente;
 	}
 	

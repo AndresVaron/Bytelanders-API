@@ -267,16 +267,17 @@ public class DireccionErradaLogic {
 
             boolean enrango = false;
 
-            if (next.getLongitud() != null && next.getLatitud() != null) {
-                Coords coord = new Coords(Double.parseDouble(next.getLatitud()),
-                        Double.parseDouble(next.getLongitud()));
+            if (next.getLongitudCaja() != null && next.getLatitudCaja() != null) {
+                Coords coord = new Coords(Double.parseDouble(next.getLatitudCaja()),
+                        Double.parseDouble(next.getLongitudCaja()));
 
                 enrango = predioEnRangoCaja(next.getDireccion(), coord, next.getDepartamento(),
                         next.getLocalidad());
             } else {
 
-                enrango = predioEnRangoCaja(next.getDireccion(), next.getIpModem(),
+                enrango = predioEnRangoCaja(next.getDireccion(), next.getDireccionCaja(),
                         next.getLocalidad(), next.getDepartamento());
+                LOGGER.log(Level.INFO, "En rango: ");
             }
 
             if (!enrango) {
@@ -286,14 +287,15 @@ public class DireccionErradaLogic {
                 if(!next.isUsaApp()) {
                 
                 	ClienteCompraEntity compra = new ClienteCompraEntity();
-                	compra.setCliente(next);
+                	compra.setCliente(next.getUsuario());
                 	compra.setComprado(false);
-                	calcularDireccionLazy(next);
+                	calcularDireccionLazy(next.getUsuario());
                 	compra.setComprado(true);
-                		
+                	
+                	LOGGER.log(Level.INFO, "Cliente compra p antes del create");
                 	clienteCompraPersistence.create(compra);
                 }
-                
+                	
                 
             } else {
                 Coords coords = addressCoords(next.getDireccion(), next.getDepartamento(), next.getLocalidad());
@@ -325,8 +327,10 @@ public class DireccionErradaLogic {
     }
     
     
-    private ClienteEntity calcularDireccionLazy(ClienteEntity cliente) throws BusinessLogicException {
-        DatosClienteCompradoEntity datos =datosCompradoPersistence.find(cliente.getCedula());
+    private ClienteEntity calcularDireccionLazy(String usuario) throws BusinessLogicException {
+       
+    	ClienteEntity cliente = clientePersistence.find(usuario);
+    	DatosClienteCompradoEntity datos =datosCompradoPersistence.find(usuario); 
         
         if(datos == null) {
         	return null;
