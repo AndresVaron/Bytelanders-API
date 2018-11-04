@@ -22,6 +22,8 @@ public class BusquedaDTO {
     private String latitud;
 
     private String tipoPredio;
+    
+    private boolean actualizada;
 
     public BusquedaDTO() {
 
@@ -38,6 +40,7 @@ public class BusquedaDTO {
             this.latitud = busquedaEntity.getLatitud();
             this.longitud = busquedaEntity.getLongitud();
             this.tipoPredio = busquedaEntity.getTipoPredio();
+            this.actualizada = busquedaEntity.getActualizada();
         }
     }
 
@@ -100,6 +103,20 @@ public class BusquedaDTO {
      */
     public void setTipoPredio(String tipoPredio) {
         this.tipoPredio = tipoPredio;
+    }
+
+    /**
+     * @return the actualizada
+     */
+    public boolean isActualizada() {
+        return actualizada;
+    }
+
+    /**
+     * @param actualizada the actualizada to set
+     */
+    public void setActualizada(boolean actualizada) {
+        this.actualizada = actualizada;
     }
 
 }

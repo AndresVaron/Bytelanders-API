@@ -20,6 +20,8 @@ public class BusquedaEntity extends BaseEntity implements Serializable {
 
     private String tipoPredio;
 
+    private boolean actualizada;
+
     /**
      * @return the longitud
      */
@@ -74,6 +76,20 @@ public class BusquedaEntity extends BaseEntity implements Serializable {
      */
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    /**
+     * @return the actualizada
+     */
+    public boolean getActualizada() {
+        return actualizada;
+    }
+
+    /**
+     * @param actualizada the actualizada to set
+     */
+    public void setActualizada(boolean actualizada) {
+        this.actualizada = actualizada;
     }
 
 }

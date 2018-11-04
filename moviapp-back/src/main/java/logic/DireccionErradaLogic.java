@@ -39,6 +39,35 @@ public class DireccionErradaLogic {
 
     private final Logger LOGGER = Logger.getLogger(GeoActualizacionLogic.class.getName());
 
+    public BusquedaEntity calcularDireccion(String direccion) {
+        LOGGER.info("Inicia proceso de calcular la busqueda de la direccion");
+        BusquedaEntity busqueda = null;
+        ClienteEntity cliente = clientePersistence.findByDireccion(direccion);
+        if (cliente != null) {
+            //Es cliente de la aplicacion
+            busqueda = busquedaPersistence.findByDireccion(direccion);
+            if (busqueda == null) {
+                busqueda = new BusquedaEntity();
+                busqueda.setDireccion(direccion);
+                busqueda.setLatitud(cliente.getLatitud());
+                busqueda.setLongitud(cliente.getLongitud());
+                busqueda.setTipoPredio(cliente.getTipoPredio());
+            }
+            if (cliente.isErrada()) {
+                busqueda = null;
+            }
+        }
+        LOGGER.log(Level.INFO, "Saliendo del proceso de calcular Direccion");
+        return busqueda;
+    }
+
+    public List<BusquedaEntity> getBusquedas() {
+        LOGGER.info("Inicia proceso de consultar todas las busquedas");
+        List<BusquedaEntity> busquedas = busquedaPersistence.findAll();
+        LOGGER.info("Termina proceso de consultar todas las busquedas");
+        return busquedas;
+    }
+
     public boolean predioEnRangoCaja(String addrrPredio, String addrrCaja, String ciudad, String depto) throws BusinessLogicException {
 
         Coords boxCoords = addressCoords(formatAddress(addrrCaja), formatDept(depto, ciudad), formatCity(ciudad));
@@ -184,26 +213,6 @@ public class DireccionErradaLogic {
         return Math.sqrt(distance);
     }
 
-    /*
-    @Inject
-    private ClientePersistence clientePersistence;
-
-    @Inject
-    private BusquedaPersistence busquedaPersistence;
-
-    public BusquedaEntity calcularDireccion(String direccion) {
-        BusquedaEntity busqueda = new BusquedaEntity();
-        busqueda = busquedaPersistence.create(busqueda);
-        LOGGER.log(Level.INFO, "Saliendo del proceso de actualizar calcular Direccion");
-        return busqueda;
-    }
-
-    public List<BusquedaEntity> getBusquedas() {
-        LOGGER.info("Inicia proceso de consultar todas las busquedas");
-        List<BusquedaEntity> busquedas = busquedaPersistence.findAll();
-        LOGGER.info("Termina proceso de consultar todas las busquedas");
-        return busquedas;
-    }*/
     public void asignarErrados() throws BusinessLogicException {
         List<ClienteEntity> clientes = clientePersistence.findAll();
         for (Iterator<ClienteEntity> iterator = clientes.iterator(); iterator.hasNext();) {

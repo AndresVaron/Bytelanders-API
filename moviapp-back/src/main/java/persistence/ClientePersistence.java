@@ -92,7 +92,7 @@ public class ClientePersistence {
     
       public ClienteEntity findByDireccion(String direccion) {
         LOGGER.log(Level.INFO, "Consultando busquedas por direccion ", direccion);
-        TypedQuery query = em.createQuery("Select e From BusquedaEntity e where e.direccion = :direccion", ClienteEntity.class);
+        TypedQuery query = em.createQuery("Select e From ClienteEntity e where e.direccion = :direccion", ClienteEntity.class);
         query = query.setParameter("direccion", direccion);
         List<ClienteEntity> sameDireccion = query.getResultList();
         ClienteEntity result;
