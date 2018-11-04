@@ -6,6 +6,8 @@
 package dtos;
 
 import entities.GeoActualizadoEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Clase que extiende de {@link AuthorDTO} para manejar las relaciones entre los
@@ -110,5 +112,10 @@ public class GeoDTO {
             this.latitud = entity.getLatitud();
             this.longitud = entity.getLongitud();
         }
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }
