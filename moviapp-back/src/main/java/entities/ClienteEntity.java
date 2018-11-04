@@ -19,31 +19,28 @@ public class ClienteEntity implements Serializable {
     private String longitud;
 
     private String latitud;
-    
+
     private String direccion;
-    
+
     private String cedula;
-    
+
     private String direccionCaja;
-    
+
     private String departamento;
 
     private String localidad;
 
     private String barrio;
-    
+
     private String longitudCaja;
-    
-   private String latitudCaja;
-   
+
+    private String latitudCaja;
+
     private boolean errada;
-    
+
     private boolean usaApp;
-    
+
     private String tipoPredio;
-    
-    
-    
 
     /**
      * @return the usuario
@@ -185,7 +182,6 @@ public class ClienteEntity implements Serializable {
         this.barrio = barrio;
     }
 
-   
     /**
      * @return the errada
      */
@@ -255,7 +251,5 @@ public class ClienteEntity implements Serializable {
     public void setTipoPredio(String tipoPredio) {
         this.tipoPredio = tipoPredio;
     }
-    
-    
 
 }
