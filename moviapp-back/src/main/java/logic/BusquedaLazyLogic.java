@@ -8,6 +8,7 @@ package logic;
 import entities.BusquedaEntity;
 import entities.ClienteEntity;
 import entities.DatosClienteCompradoEntity;
+import exceptions.BusinessLogicException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -39,16 +40,18 @@ public class BusquedaLazyLogic {
     @Inject
     private  DireccionErradaLogic dirErradaLogic;
     
-    public ClienteEntity calcularDireccion(String direccion) {
+    public ClienteEntity calcularDireccion(String direccion) throws BusinessLogicException {
         ClienteEntity cliente = clientePersistence.findByDireccion(direccion);
         DatosClienteCompradoEntity datos =datosCompradoPersistence.find(cliente.getCedula());
         String[] direcciones = datos.getDireccionPredio().split(",");
         for (int i = 0; i < direcciones.length; i++) {
-            
+            if(dirErradaLogic.predioEnRangoCaja(direcciones[i], cliente.getDireccionCaja(), cliente.getLocalidad(), cliente.getDepartamento())==true){
+              cliente.setDireccion(direcciones[i]);
+                clientePersistence.update(cliente);
+                i=direcciones.length;
+            }
         }
-        BusquedaEntity busqueda = new BusquedaEntity();
-        busqueda = busquedaPersistence.create(busqueda);
-        LOGGER.log(Level.INFO, "Saliendo del proceso de actualizar calcular Direccion");
+       LOGGER.log(Level.INFO, "Saliendo del proceso de actualizar calcular Direccion");
         return cliente;
     }
 
