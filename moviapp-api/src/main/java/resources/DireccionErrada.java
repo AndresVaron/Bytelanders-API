@@ -22,6 +22,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import logic.DireccionErradaLogic;
 
 /**
@@ -49,9 +50,9 @@ public class DireccionErrada {
      * @param direccion la direccion que se va a analizar.
      * @return Objeto que representa la respuesta de la busqueda.
      */
-    @POST
-    @Path("{direccion}/{localidad}/{departamento}")
-    public BusquedaDTO calcularDireccion(@PathParam("direccion") String direccion, @PathParam("localidad") String localidad, @PathParam("departamento") String departamento) {
+    @GET
+    @Path("dir")
+    public BusquedaDTO calcularDireccion(@QueryParam("direccion") String direccion, @QueryParam("localidad") String localidad, @QueryParam("departamento") String departamento) {
         LOGGER.log(Level.INFO, "DireccionErradaResource direccion: input: {0}", direccion);
         return new BusquedaDTO(direccionErrada.calcularDireccion(direccion, localidad, departamento));
     }
