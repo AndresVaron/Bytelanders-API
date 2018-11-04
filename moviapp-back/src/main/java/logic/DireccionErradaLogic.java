@@ -98,12 +98,18 @@ public class DireccionErradaLogic {
     		Coords instalCoords = addressCoords(formatAddress(addrrPredio), formatDept(depto, ciudad), formatCity(ciudad));
 
     		if (boxCoords == null || instalCoords == null) {
+                         LOGGER.log(Level.INFO, "null");
     			return false;
     		}
         
-    		return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) <= 150.0;
-    	}
+    		double d = distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0);
+                
+                LOGGER.log(Level.INFO, d+"");
+                
+                return d<=150.0; 
+        }
     	catch(BusinessLogicException e) {
+                LOGGER.log(Level.INFO, e.getMessage());
     		return false;
     	}
     }
@@ -119,6 +125,7 @@ public class DireccionErradaLogic {
     		return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) <= 150.0;
     	}
     	catch(BusinessLogicException e) {
+                LOGGER.log(Level.INFO, e.getMessage());
     		return false;
     	}
 
@@ -126,10 +133,12 @@ public class DireccionErradaLogic {
     }
 
     private String formatDept(String dept, String city) {
-        return (city.equals("Bogota")) ? "" : ",+" + dept;
+        return (city.toUpperCase().contains("BOGOTA")) ? "" : ",+" + dept;
     }
 
     private String formatCity(String city) {
+        if(city.toUpperCase().contains("BOGOTA")) 
+            city = "Bogota";
         return ",+" + city;
     }
 
@@ -162,12 +171,18 @@ public class DireccionErradaLogic {
 
     private Coords addressCoords(String address, String dept, String city) {
 
+        LOGGER.log(Level.INFO, address);
+        
         HttpURLConnection con = null;
 
         Coords coords = new Coords();
 
         try {
             URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?address=" + address + city + dept + "&key=AIzaSyCyhpCQfv5n_EeBBFTBxZMxSD633ul9I2o");
+            
+            
+            LOGGER.log(Level.INFO, url.toString());
+            
             con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
 
@@ -203,6 +218,8 @@ public class DireccionErradaLogic {
             }
 
         } catch (IOException ioe) {
+            ioe.printStackTrace();
+            LOGGER.log(Level.INFO, ioe.getMessage());
             return null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -241,7 +258,7 @@ public class DireccionErradaLogic {
         double height = el1 - el2;
 
         distance = Math.pow(distance, 2) + Math.pow(height, 2);
-
+        LOGGER.log(Level.INFO, distance+"");
         return Math.sqrt(distance);
     }
 
@@ -281,6 +298,8 @@ public class DireccionErradaLogic {
             }
 
             if (!enrango) {
+                
+                LOGGER.log(Level.INFO, "Set errada");
                 next.setErrada(true);
                  
                 //Si sí usa la App, eventualmente se actualizará. No importa.
@@ -298,7 +317,7 @@ public class DireccionErradaLogic {
                 	
                 
             } else {
-                Coords coords = addressCoords(next.getDireccion(), next.getDepartamento(), next.getLocalidad());
+                Coords coords = addressCoords(formatAddress(next.getDireccion()), formatDept(next.getDepartamento(),next.getLocalidad()), formatCity(next.getLocalidad()));
                 next.setLongitud("" + coords.getLng());
                 next.setLatitud("" + coords.getLat());
                 next.setErrada(false);

@@ -56,6 +56,7 @@ public class ClientePersistence {
      */
     public ClienteEntity update(ClienteEntity clienteEntity) {
         LOGGER.log(Level.INFO, "Actualizando cliente con usuario = {0}", clienteEntity.getUsuario());
+        LOGGER.log(Level.INFO, "ERRADA: " + clienteEntity.isErrada());
         em.getTransaction().begin();
         clienteEntity = em.merge(clienteEntity);
         em.getTransaction().commit();
@@ -92,10 +93,13 @@ public class ClientePersistence {
 
     public List<ClienteEntity> findByDireccion(String direccion, String localidad, String departamento) {
         LOGGER.log(Level.INFO, "Consultando busquedas por direccion ", direccion);
-        TypedQuery query = em.createQuery("Select e From ClienteEntity e where e.direccion = :direccion, e.localidad = :localidad, e.departamento = :departamento", ClienteEntity.class);
+        TypedQuery query = em.createQuery("Select e from ClienteEntity e where e.direccion = :direccion and e.localidad = :localidad and e.departamento = :departamento", ClienteEntity.class);
         query = query.setParameter("direccion", direccion);
         query = query.setParameter("localidad", localidad);
         query = query.setParameter("departamento", departamento);
+        
+        LOGGER.log(Level.INFO, query.toString());
+        
         List<ClienteEntity> sameDireccion = query.getResultList();
         LOGGER.log(Level.INFO, "Saliendo de consultar busquedas por direccion ", direccion);
         return sameDireccion;

@@ -147,12 +147,13 @@ public class ClasificacionImagenes {
     	return addressCoords(formatAddress(addrr), formatDept(dept, city), formatCity(city));
     }
     
-
     private String formatDept(String dept, String city) {
-        return (city.equals("Bogota")) ? "" : ",+" + dept;
+        return (city.toUpperCase().contains("BOGOTA")) ? "" : ",+" + dept;
     }
 
     private String formatCity(String city) {
+        if(city.toUpperCase().contains("BOGOTA")) 
+            city = "Bogota";
         return ",+" + city;
     }
 
