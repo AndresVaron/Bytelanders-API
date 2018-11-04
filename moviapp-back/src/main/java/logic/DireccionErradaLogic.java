@@ -37,6 +37,9 @@ public class DireccionErradaLogic {
     }
 
     public List<BusquedaEntity> getBusquedas() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LOGGER.info("Inicia proceso de consultar todas las busquedas");
+        List<BusquedaEntity> busquedas = busquedaPersistence.findAll();
+        LOGGER.info("Termina proceso de consultar todas las busquedas");
+        return busquedas;
     }
 }

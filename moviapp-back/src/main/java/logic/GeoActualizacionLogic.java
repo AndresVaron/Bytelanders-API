@@ -5,8 +5,10 @@
  */
 package logic;
 
+import entities.BusquedaEntity;
 import entities.ClienteEntity;
 import entities.GeoActualizadoEntity;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
@@ -53,4 +55,12 @@ public class GeoActualizacionLogic {
         }
         LOGGER.log(Level.INFO, "Saliendo del proceso de actualizar coordenadas geograficas.");
     }
+
+    public List<GeoActualizadoEntity> getActualizaciones() {
+        LOGGER.info("Inicia proceso de consultar todas las actualizaciones");
+        List<GeoActualizadoEntity> actualizaciones = geoPersistence.findAll();
+        LOGGER.info("Termina proceso de consultar todas las actualizaciones");
+        return actualizaciones;
+    }
+
 }

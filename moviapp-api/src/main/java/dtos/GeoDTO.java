@@ -5,6 +5,8 @@
  */
 package dtos;
 
+import entities.GeoActualizadoEntity;
+
 /**
  * Clase que extiende de {@link AuthorDTO} para manejar las relaciones entre los
  * AuthorDTO y otros DTOs. Para conocer el contenido de un Autor vaya a la
@@ -103,4 +105,10 @@ public class GeoDTO {
         this.correo = correo;
     }
 
+    public GeoDTO(GeoActualizadoEntity entity) {
+        if (entity != null) {
+            this.latitud = entity.getLatitud();
+            this.longitud = entity.getLongitud();
+        }
+    }
 }
