@@ -222,5 +222,7 @@ public class ClienteEntity implements Serializable {
     public void setUsaApp(boolean usaApp) {
         this.usaApp = usaApp;
     }
+    
+    
 
 }

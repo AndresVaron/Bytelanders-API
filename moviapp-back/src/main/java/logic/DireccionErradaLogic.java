@@ -209,11 +209,11 @@ public class DireccionErradaLogic {
            List<ClienteEntity> clientes = clientePersistence.findAll();
            for (Iterator<ClienteEntity> iterator = clientes.iterator(); iterator.hasNext();) {
                ClienteEntity next = iterator.next();
-               if(predioEnRangoCaja(next.getDireccion(), next.getDireccionCaja(), next.getLocalidad()  , next.getDepartamento())==false){
-                next.setErrada(false);
+               if(!predioEnRangoCaja(next.getDireccion(), next.getDireccionCaja(), next.getLocalidad()  , next.getDepartamento())){
+                next.setErrada(true);
                }
                else{
-                   next.setErrada(true);
+                   next.setErrada(false);
                }
                
            }

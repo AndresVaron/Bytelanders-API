@@ -44,11 +44,11 @@ public class BusquedaLazyLogic {
         DatosClienteCompradoEntity datos =datosCompradoPersistence.find(cliente.getCedula());
         String[] direcciones = datos.getDireccionPredio().split(",");
         for (int i = 0; i < direcciones.length; i++) {
-            if(dirErradaLogic.predioEnRangoCaja(direcciones[i], cliente.getDireccionCaja(), cliente.getLocalidad(), cliente.getDepartamento())==true){
+            if(dirErradaLogic.predioEnRangoCaja(direcciones[i], cliente.getDireccionCaja(), cliente.getLocalidad(), cliente.getDepartamento())){
               cliente.setDireccion(direcciones[i]);
-              cliente.setErrada(true);
-                clientePersistence.update(cliente);
-                i=direcciones.length;
+              cliente.setErrada(false);
+              clientePersistence.update(cliente);
+              i=direcciones.length;
                 
             }
         }
