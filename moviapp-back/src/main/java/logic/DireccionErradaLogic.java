@@ -43,7 +43,13 @@ public class DireccionErradaLogic {
     public BusquedaEntity calcularDireccion(String direccion,String localidad, String departamento) {
         LOGGER.info("Inicia proceso de calcular la busqueda de la direccion");
         BusquedaEntity busqueda = null;
-        ClienteEntity cliente = clientePersistence.findByDireccion(direccion,localidad,departamento);
+        List<ClienteEntity> clientes = clientePersistence.findByDireccion(direccion,localidad,departamento);
+        ClienteEntity cliente = null;
+        
+        if(clientes.size() > 0) {
+        	cliente = clientes.get(0);
+        }
+        
         if (cliente != null) {
             //Es cliente de la aplicacion
             busqueda = busquedaPersistence.findByDireccion(direccion);

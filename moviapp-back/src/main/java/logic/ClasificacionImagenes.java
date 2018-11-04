@@ -45,28 +45,28 @@ public class ClasificacionImagenes {
     	
     	Coords coordenadas = dirLog.darCoordenadasDireccion(direccion, ciudad, depto);
         	
+    	if(direccionesRepetidas(direccion, ciudad, depto)){
+    		return "Multifamiliar";
+    	}
     	
-
- /*       if(direccionesRepetidas){
-			return "Apartamento";		}
-		else if(true){
-			return palabrasClave(direccion);
-		}
-		else{
-			return tipoPredio(lat,lon);
-		}
-        return null;*/
+    	String op2 = palabrasClave(direccion);
+    	if(op2 != null) {
+    		return op2;
+    	}
+    	
+    	else
+    		return tipoPredio(coordenadas.getLng(), coordenadas.getLat());
 
     }
 
     //Metodo 1 mirar si hay direcciones repetidas en la base de datos
-    //TODO VERIFICAR EN LA BASE DE DATOS, SI HAY REPETIDOS ES TRUE Y QUIERE DECIR QUE SE TIENE UN APTO
     private boolean direccionesRepetidas(String direccion, String ciudad, String departamento) {
         //poner en la clase cliente el atributo direccion 
     	
     	List<ClienteEntity> lista = clientePersistence.findByDireccion(direccion,ciudad, departamento);
     	
-    	
+    	if(lista.size() >= 0)
+    		return true;
     	
         return false;
     }
@@ -140,7 +140,7 @@ public class ClasificacionImagenes {
         if (tipoFinal.equals("Casas")) {
             respuesta = "Casa";
         } else if (tipoFinal.equals("Apartamentos")) {
-            respuesta = "Apartamento";
+            respuesta = "Edificio";
         }
         return respuesta;
     }
