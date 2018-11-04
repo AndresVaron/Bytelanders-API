@@ -31,7 +31,7 @@ public class ClienteCompraPersistence {
 	    
 	    public List<ClienteCompraEntity> findComprasPendientes() {
 	        LOGGER.log(Level.INFO, "Consultando todas las cliente compra persistence");
-	        Query q = em.createQuery("select u from BusquedaEntity u where comprado = false");
+	        Query q = em.createQuery("select u from ClienteCompraEntity u where comprado = false");
 	        return q.getResultList();
 	    }
 	
