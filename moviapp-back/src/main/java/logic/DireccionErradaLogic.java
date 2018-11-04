@@ -5,7 +5,6 @@
  */
 package logic;
 
-import entities.BusquedaEntity;
 import entities.ClienteEntity;
 import exceptions.BusinessLogicException;
 
@@ -16,12 +15,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import persistence.BusquedaPersistence;
 import persistence.ClientePersistence;
 
 /**
