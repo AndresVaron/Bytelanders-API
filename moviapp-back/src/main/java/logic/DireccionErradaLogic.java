@@ -6,7 +6,9 @@
 package logic;
 
 import entities.BusquedaEntity;
+import entities.ClienteCompraEntity;
 import entities.ClienteEntity;
+import entities.DatosClienteCompradoEntity;
 import exceptions.BusinessLogicException;
 
 import java.io.BufferedReader;
@@ -24,6 +26,7 @@ import persistence.BusquedaPersistence;
 
 import persistence.BusquedaPersistence;
 import persistence.ClientePersistence;
+import persistence.DatosClienteCompradoPersistence;
 
 /**
  *
@@ -40,6 +43,10 @@ public class DireccionErradaLogic {
 
     @Inject
     private ClasificacionImagenes clasIms;
+    
+    @Inject
+    private DatosClienteCompradoPersistence datosCompradoPersistence;
+
     
     private final Logger LOGGER = Logger.getLogger(GeoActualizacionLogic.class.getName());
 
@@ -65,6 +72,9 @@ public class DireccionErradaLogic {
             }
             if (cliente.isErrada()) {
                 busqueda = null;
+            }
+            if(cliente.isErrada()&&!cliente.isUsaApp()){
+                
             }
         }
         LOGGER.log(Level.INFO, "Saliendo del proceso de calcular Direccion");
@@ -258,7 +268,12 @@ public class DireccionErradaLogic {
 
             if (!enrango) {
                 next.setErrada(true);
-
+                ClienteCompraEntity compra = new ClienteCompraEntity();
+                compra.setCliente(next);
+                compra.setComprado(false);
+                calcularDireccionLazy(next);
+                compra.setComprado(true);
+                        
                 //TODO COMPRAR Y ACTUALIZAR
                 //LUEGO SE CREA ENTIDAD DE BUSQUEDA
                 
@@ -276,4 +291,27 @@ public class DireccionErradaLogic {
 
         }
     }
+    
+    public ClienteEntity calcularDireccionLazy(ClienteEntity cliente) throws BusinessLogicException {
+        DatosClienteCompradoEntity datos =datosCompradoPersistence.find(cliente.getCedula());
+        String[] direcciones = datos.getDireccionPredio().split(",");
+        for (int i = 0; i < direcciones.length; i++) {
+            if(predioEnRangoCaja(direcciones[i], cliente.getDireccionCaja(), cliente.getLocalidad(), cliente.getDepartamento())){
+            Coords coords = addressCoords(direcciones[i], datos.getDepartamento(), datos.getCiudad());
+            cliente.setLongitud(""+coords.getLng());
+            cliente.setLatitud(""+coords.getLat());
+            cliente.setDireccion(direcciones[i]);
+            cliente.setErrada(false);
+              clientePersistence.update(cliente);
+              i=direcciones.length;
+                
+            }
+        }
+       LOGGER.log(Level.INFO, "Saliendo del proceso de actualizar calcular Direccion");
+        return cliente;
+    }
+
+    
+    
+    
 }

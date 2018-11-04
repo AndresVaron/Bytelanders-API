@@ -35,4 +35,12 @@ public class ClienteCompraPersistence {
 	        return q.getResultList();
 	    }
 	
+             public ClienteCompraEntity update(ClienteCompraEntity clienteEntity) {
+        LOGGER.log(Level.INFO, "Actualizando cliente con usuario = {0}", clienteEntity.getCliente().getUsuario());
+        em.getTransaction().begin();
+        clienteEntity = em.merge(clienteEntity);
+        em.getTransaction().commit();
+        LOGGER.log(Level.INFO, "Saliendo de actualizar el cliente con usuario = {0}", clienteEntity.getCliente().getUsuario());
+        return clienteEntity;
+    }
 }
