@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import persistence.BusquedaPersistence;
 import persistence.ClientePersistence;
 
 /**
@@ -60,6 +61,10 @@ public class DireccionErradaLogic {
         return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) >= 150.0;
 
     }
+    
+    public Coords darCoordenadasDireccion(String addrr, String city, String dept) throws BusinessLogicException {
+    	return addressCoords(formatAddress(addrr), formatDept(dept, city), formatCity(city));
+    }
 
     private String formatDept(String dept, String city) {
         return (city.equals("Bogota")) ? "" : ",+" + dept;
@@ -96,7 +101,7 @@ public class DireccionErradaLogic {
         return newS;
     }
 
-    public Coords addressCoords(String address, String dept, String city) {
+    private Coords addressCoords(String address, String dept, String city) {
 
         HttpURLConnection con = null;
 
