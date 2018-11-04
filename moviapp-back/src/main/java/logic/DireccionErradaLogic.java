@@ -6,12 +6,15 @@
 package logic;
 
 import entities.BusquedaEntity;
+import entities.ClienteEntity;
 import exceptions.BusinessLogicException;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,18 +30,20 @@ import persistence.ClientePersistence;
  */
 @Stateless
 public class DireccionErradaLogic {
-
-	
+    @Inject 
+    ClientePersistence clientePersistence;
 	
     private final Logger LOGGER = Logger.getLogger(GeoActualizacionLogic.class.getName());
    
     public boolean predioEnRangoCaja(String addrrPredio, String addrrCaja, String ciudad, String depto) throws BusinessLogicException {
     	
     	Coords boxCoords = addressCoords(formatAddress(addrrCaja), formatDept(depto, ciudad), formatCity(ciudad));
-		Coords instalCoords = addressCoords(formatAddress(addrrPredio), formatDept(depto, ciudad), formatCity(ciudad));
+        Coords instalCoords = addressCoords(formatAddress(addrrPredio), formatDept(depto, ciudad), formatCity(ciudad));
 		
-		
-		return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) >= 150.0;
+        if(boxCoords == null || instalCoords == null)
+            return false;
+                    
+        return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) >= 150.0;
 	
     }
     
@@ -46,7 +51,10 @@ public class DireccionErradaLogic {
     	
     	Coords instalCoords = addressCoords(formatAddress(addrrPredio), formatDept(depto, ciudad), formatCity(ciudad));
 		
-		return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) >= 150.0;
+        if(instalCoords == null)
+            return false;
+        
+        return distance(boxCoords.getLat(), instalCoords.getLat(), boxCoords.getLng(), instalCoords.getLng(), 0, 0) >= 150.0;
     	
     }
     
@@ -132,6 +140,9 @@ public class DireccionErradaLogic {
 			}
 			
 		}
+                catch(IOException ioe){
+                    return null;
+                }
 		catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -193,4 +204,18 @@ public class DireccionErradaLogic {
         LOGGER.info("Termina proceso de consultar todas las busquedas");
         return busquedas;
     }*/
+        
+       public void asignarErrados() throws BusinessLogicException{
+           List<ClienteEntity> clientes = clientePersistence.findAll();
+           for (Iterator<ClienteEntity> iterator = clientes.iterator(); iterator.hasNext();) {
+               ClienteEntity next = iterator.next();
+               if(predioEnRangoCaja(next.getDireccion(), next.getDireccionCaja(), next.getLocalidad()  , next.getDepartamento())==false){
+                next.setErrada(false);
+               }
+               else{
+                   next.setErrada(true);
+               }
+               
+           }
+       }
 }

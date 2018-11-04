@@ -36,6 +36,7 @@ public class ClienteEntity implements Serializable {
     
     private boolean errada;
     
+    private boolean usaApp;
     
     
     
@@ -206,6 +207,20 @@ public class ClienteEntity implements Serializable {
      */
     public void setErrada(boolean errada) {
         this.errada = errada;
+    }
+
+    /**
+     * @return the usaApp
+     */
+    public boolean isUsaApp() {
+        return usaApp;
+    }
+
+    /**
+     * @param usaApp the usaApp to set
+     */
+    public void setUsaApp(boolean usaApp) {
+        this.usaApp = usaApp;
     }
 
 }

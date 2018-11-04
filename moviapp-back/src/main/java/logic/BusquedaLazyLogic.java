@@ -40,15 +40,16 @@ public class BusquedaLazyLogic {
     @Inject
     private  DireccionErradaLogic dirErradaLogic;
     
-    public ClienteEntity calcularDireccion(String direccion) throws BusinessLogicException {
-        ClienteEntity cliente = clientePersistence.findByDireccion(direccion);
+    public ClienteEntity calcularDireccion(ClienteEntity cliente) throws BusinessLogicException {
         DatosClienteCompradoEntity datos =datosCompradoPersistence.find(cliente.getCedula());
         String[] direcciones = datos.getDireccionPredio().split(",");
         for (int i = 0; i < direcciones.length; i++) {
             if(dirErradaLogic.predioEnRangoCaja(direcciones[i], cliente.getDireccionCaja(), cliente.getLocalidad(), cliente.getDepartamento())==true){
               cliente.setDireccion(direcciones[i]);
+              cliente.setErrada(true);
                 clientePersistence.update(cliente);
                 i=direcciones.length;
+                
             }
         }
        LOGGER.log(Level.INFO, "Saliendo del proceso de actualizar calcular Direccion");
